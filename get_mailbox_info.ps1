@@ -1,13 +1,24 @@
-$acctName=Read-Host "<UPN of the account, such as belindan@litwareinc.onmicrosoft.com>" -AsSecureString
-
 #Azure Active Directory
 Connect-AzureAD
 #Exchange Online
 Connect-ExchangeOnline
 
+$MailboxUsers = @()
+$Mailboxes = Get-ExoMailbox -PropertySets 'Minimum','AddressList'
 # Get the list of users with mailboxes
-$MailboxUsers = Get-ExoMailbox | Select-Object @{Name="First Name"; Expression={(Get-AzureADUser -Object $_.ExternalDirectoryObjectId).GivenName}}, @{Name="Last Name"; Expression={(Get-AzureADUser -Object $_.ExternalDirectoryObjectId).Surname}}, DisplayName, HiddenFromAddressListsEnabled, PrimarySmtpAddress, @{Name="License"; Expression={(Get-AzureADUser -Object $_.ExternalDirectoryObjectId).Licenses[0].AccountSkuId}} | Format-Table
+
+ForEach ( $mailbox in $Mailboxes ) {
+	$user = Get-AzureADUser -Object $mailbox.ExternalDirectoryObjectId
+	
+	$MailboxUsers += @{
+		'First Name'   = $user.GivenName;
+		'Last Name'    = $user.Surname;
+		'Display Name' = $mailbox.DisplayName;
+		'Hidden'       = $mailbox.HiddenFromAddressListsEnabled;
+		'Email'        = $mailbox.PrimarySmtpAddress;
+		'License'      = $user.AssignedLicenses[0].SkuId
+	}
+}
 
 # Display the list of users
-$MailboxUsers | Format-Table
-
+$MailboxUsers | % { new-object PSObject -Property $_} | Format-Table
