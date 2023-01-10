@@ -2,9 +2,9 @@
 param(
   [Parameter(
     Mandatory = $true,
-    HelpMessage = "Enter a single UserPrincipalName",
+    HelpMessage = "Enter a single UserPrincipalName"
     )]
-  [string[]]$UserName,
+  [string[]]$UserName
 )
 
 Connect-ExchangeOnline
