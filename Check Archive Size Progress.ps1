@@ -6,7 +6,6 @@ param(
     )]
   [string[]]$UserName
 )
-
 Connect-ExchangeOnline
 
 While ($true)
