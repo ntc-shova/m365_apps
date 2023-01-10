@@ -1,4 +1,5 @@
-﻿$UserName = Read-Host -Prompt "Enter the email address of the mailbox you want to check"
+﻿Connect-ExchangeOnline
+$UserName = Read-Host -Prompt "Enter the email address of the mailbox you want to check"
 
 While ($true)
 {
