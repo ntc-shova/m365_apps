@@ -1,6 +1,13 @@
-﻿Connect-ExchangeOnline
-$UserName = Read-Host -Prompt "Enter the email address of the mailbox you want to check".Trim()
-clear
+﻿[CmdletBinding(DefaultParameterSetName="Default")]
+param(
+  [Parameter(
+    Mandatory = $true,
+    HelpMessage = "Enter a single UserPrincipalName",
+    )]
+  [string[]]$UserName,
+)
+
+Connect-ExchangeOnline
 
 While ($true)
 {
